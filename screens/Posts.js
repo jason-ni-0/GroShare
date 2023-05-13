@@ -45,6 +45,7 @@ export default function Posts() {
 
     const renderItem = ({item}) => {
         return(
+            <TouchableOpacity>
             <View style={styles.post}>
           <View style={styles.header}>
             <Image source={{ uri: 'https://webupon.com/wp-content/uploads/2021/09/SampleImage1-Dog-small.png' }} style={styles.avatar} />
@@ -59,6 +60,7 @@ export default function Posts() {
           <View style={styles.actions}>
           </View>
         </View>
+        </TouchableOpacity>
         )
     }
 
