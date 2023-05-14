@@ -1,7 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MainNav from '../screens/MainNav'
-// import CreatePost from '../screens/CreatePost'
+import CreatePost from '../screens/CreatePost'
 import Home from '../screens/Home'
 import GetEmail from '../screens/GetEmail'
 import GetPassword from '../screens/GetPassword'
@@ -26,11 +26,11 @@ export default function HomeStack({navigation}) {
           name="MainNav"
           component={MainNav}
           options={{ headerShown: false }}
-        />{/*
+        />
         <Stack.Screen
           name="Create Post"
           component={CreatePost}
-      />*/}
+      />
         </Stack.Navigator>
     );
   }
