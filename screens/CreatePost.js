@@ -1,12 +1,13 @@
 import { React, useState } from 'react';
 import { View, TextInput, StyleSheet, KeyboardAvoidingView, ActivityIndicator, Animated } from 'react-native';
 import { Text, Button, Input } from '@rneui/themed';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 export default function CreatePost( { route, navigation }) {
   const [isLoading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
+  const [img, setImg] = useState("");
 
 
   shakeAnimation = new Animated.Value(0)
@@ -49,8 +50,23 @@ export default function CreatePost( { route, navigation }) {
       placeholder="Description of Items"
       onChangeText={text => setDesc(text)}
       />
+      {img ? <Text>Image Selected</Text>: null }
 
-      <Button></Button>
+<Button
+      title="Pick Image"
+      titleStyle={{ fontWeight: 'bold' }}
+      buttonStyle={{
+      backgroundColor: 'rgba(39, 39, 39, 1)',
+      borderColor: 'gray',
+      borderWidth: 1,
+      borderRadius: 5,
+      height: 45,
+      }}
+      onPress={() => launchImageLibrary({},response => {
+        fetch(response.assets[0].uri)
+        .then((res) => {setImg(res.blob())
+        })})}
+      />
 
       </Animated.View>
       <View style={ styles.footer }>
