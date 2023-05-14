@@ -7,41 +7,41 @@ import { useNavigation } from '@react-navigation/native'
 export default function Posts({navigation}) {
   const nav = useNavigation();
   const [search, setSearch] = useState('');
-  const [items, setItems] = useState([]);
-  // const items = [
-  //   {
-  //     id: 1,
-  //     sender: 'user',
-  //     title: 'test',
-  //     school: 'UC Santa Barbara',
-  //     time: 'May 10th',
-  //     desc: 'food'
-  //   },
-  //   {
-  //     id: 2,
-  //     sender: 'user2',
-  //     title: 'test2',
-  //     school: 'SBCC',
-  //     time: 'May 10th',
-  //     desc: 'personal stuff'
-  //   }
-  // ];
-  useEffect(() => {
-    const unsubscribe = firestore()
-      .collection('posts')
-      .onSnapshot((querySnapshot) => {
-        const posts = [];
-        querySnapshot.forEach((documentSnapshot) => {
-          const post = {
-            id: documentSnapshot.id,
-            ...documentSnapshot.data(),
-          };
-          posts.push(post);
-        });
-        setItems(posts);
-      });
-    return unsubscribe;
-  }, []);
+  //const [items, setItems] = useState([]);
+  const items = [
+    {
+      id: 1,
+      sender: 'user',
+      title: 'test',
+      school: 'UC Santa Barbara',
+      time: 'May 10th',
+      desc: 'food'
+    },
+    {
+      id: 2,
+      sender: 'user2',
+      title: 'test2',
+      school: 'SBCC',
+      time: 'May 10th',
+      desc: 'personal stuff'
+    }
+  ];
+  // useEffect(() => {
+  //   const unsubscribe = firestore()
+  //     .collection('posts')
+  //     .onSnapshot((querySnapshot) => {
+  //       const posts = [];
+  //       querySnapshot.forEach((documentSnapshot) => {
+  //         const post = {
+  //           id: documentSnapshot.id,
+  //           ...documentSnapshot.data(),
+  //         };
+  //         posts.push(post);
+  //       });
+  //       setItems(posts);
+  //     });
+  //   return unsubscribe;
+  // }, []);
 
     // useEffect(() => {
     //   const unsubscribe = firestore()

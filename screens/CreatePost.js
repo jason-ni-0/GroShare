@@ -4,19 +4,21 @@ import { Text, Button, Input } from '@rneui/themed';
 import {launchImageLibrary} from 'react-native-image-picker';
 import { doc, getFirestore, collection, setDoc, addDoc, serverTimestamp } from "firebase/firestore"; 
 import { getAuth } from "firebase/auth";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default function CreatePost( { route, navigation }) {
   const [isLoading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [school, setSchool] = useState("");
-  const [img, setImg] = useState("");
+  const [img, setImg] = useState(null);
+  const [url, setURL] = useState("");
   const auth = getAuth();
   const storage = getStorage();
     if (auth){
       const db = getFirestore();
-      const storageRef = ref(storage, 'some-child');
+      const filename = Math.random(999999999).toString();
+      const storageRef = ref(storage, filename);
 
   shakeAnimation = new Animated.Value(0)
     startShake = () => {
@@ -31,19 +33,28 @@ export default function CreatePost( { route, navigation }) {
    function savePost() {
     setLoading(true);
     uploadBytes(storageRef, img).then((snapshot) => {
-        console.log(snapshot);
+        //console.log(img)
+        //console.log(snapshot);
+        getDownloadURL(ref(storage, filename))
+        .then((url) => {
+          console.log(url);
+          setURL(url)
+          try{ 
+            addDoc(collection(db, "posts"), {
+                userId: auth.currentUser.uid,
+                title: title,
+                desc: desc,
+                school: school,
+                img: url, 
+                timestamp: serverTimestamp(),
+            });
+            }
+            catch(e){console.log(e)};
+        })
+        .catch((error) => {
+          // Handle any errors
+        });
       });
-    try{ 
-        addDoc(collection(db, "posts"), {
-            userId: auth.currentUser.uid,
-            title: title,
-            desc: desc,
-            school: school,
-            img: 'blank', // change
-            timestamp: serverTimestamp(),
-        }, { merge: false });
-        }
-        catch(e){console.log(e)}
         navigation.reset({
           index: 0,
           routes: [{name: 'MainNav'}],
@@ -102,8 +113,10 @@ export default function CreatePost( { route, navigation }) {
       }}
       onPress={() => launchImageLibrary({},response => {
         fetch(response.assets[0].uri)
-        .then((res) => {setImg(res.blob())
-        })})}
+        //.then((res) => {setImg(res.blob())
+        .then((res) => res.blob())
+        .then((blob) => setImg(blob))
+        })}
       />
 
       </Animated.View>
