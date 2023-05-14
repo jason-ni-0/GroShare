@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Text, Button } from '@rneui/themed';
 // import Profile from '../screens/Profile'
 import Posts from '../screens/Posts'
-// import Messages from '../screens/Messages'
+import Messages from '../screens/Messages'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Tab = createBottomTabNavigator();
@@ -23,7 +23,6 @@ export default function MainNav({ navigation }) {
           ),
         }}
           component={Posts} />
-          {/*
         <Tab.Screen 
         name="Messages" 
         options={{
@@ -33,6 +32,7 @@ export default function MainNav({ navigation }) {
             ),
         }}
         component={Messages} />
+        {/*
         <Tab.Screen 
             name="Profile" 
             options={{

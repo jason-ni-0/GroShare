@@ -2,7 +2,7 @@ import { React, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import HomeStack from './routes/HomeStack'
-//import firebase from "./config/firebase";
+import firebase from "./config/firebase";
 
 export default function App() {
   return (
