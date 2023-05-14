@@ -7,15 +7,15 @@ import { getAuth, signOut } from "firebase/auth";
 
 
 export default function Profile({ navigation }) {
+    const [name, setName] = useState("");
+    const [lastName, setLastname] = useState("");
+    const [userName, setUsername] = useState("");
+    const [profURL, setProfURL] = useState("");
+    const [user, setUser] = useState("");
     const auth = getAuth();
     if (auth){
       const db = getFirestore();
-      const user = auth.currentUser;
       const nav = useNavigation();
-      const [name, setName] = useState("");
-      const [lastName, setLastname] = useState("");
-      const [userName, setUsername] = useState("");
-      const [profURL, setProfURL] = useState("");
   
       useEffect(() => {
       getUser();
@@ -47,6 +47,7 @@ export default function Profile({ navigation }) {
         });
       }
       function getUser(){
+          setUser(auth.currentUser)
           let docRef = doc(db, "users", auth.currentUser.email)
           getDoc(docRef).then((doc) => {
           if (doc.exists) {
