@@ -1,14 +1,13 @@
-import { Text, FlatList, TouchableOpacity, View, Image, StyleSheet } from 'react-native';
+import { Text, FlatList, TouchableOpacity, View, Image, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { React, useState, useEffect } from 'react';
 import { SearchBar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native'
 import { collection, query, where, getDocs, getFirestore, orderBy } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 
-//import firestore from '@react-native-firebase/firestore';
-
 export default function Posts({navigation}) {
   const [items, setItems] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   // const items = [
   //   {
   //     id: 1,
@@ -55,10 +54,10 @@ export default function Posts({navigation}) {
         <TouchableOpacity>
         <View style={styles.post}>
       <View style={styles.header}>
-        <Image source={{ uri: 'https://webupon.com/wp-content/uploads/2021/09/SampleImage1-Dog-small.png' }} style={styles.avatar} />
+        <Image source={{ uri: 'https://as2.ftcdn.net/v2/jpg/02/15/84/43/1000_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg' }} style={styles.avatar} />
         <View>
           <Text style={styles.name}>{item.title}</Text>
-          <Text style={styles.date}>{item.time}</Text>
+          <Text style={styles.date}>{item.timestamp.toDate().toString().slice(0,-12)}</Text>
           <Text style={styles.date}>{item.school}</Text>
         </View>
       </View>
@@ -72,42 +71,8 @@ export default function Posts({navigation}) {
 }
   if (auth){
     const db = getFirestore();
-  // useEffect(() => {
-  //   const unsubscribe = firestore()
-  //     .collection('posts')
-  //     .onSnapshot((querySnapshot) => {
-  //       const posts = [];
-  //       querySnapshot.forEach((documentSnapshot) => {
-  //         const post = {
-  //           id: documentSnapshot.id,
-  //           ...documentSnapshot.data(),
-  //         };
-  //         posts.push(post);
-  //       });
-  //       setItems(posts);
-  //     });
-  //   return unsubscribe;
-  // }, []);
-
-    // useEffect(() => {
-    //   const unsubscribe = firestore()
-    //     .collection('posts')
-    //     .onSnapshot((querySnapshot) => {
-    //       const posts = [];
-    //       querySnapshot.forEach((documentSnapshot) => {
-    //         const post = {
-    //           id: documentSnapshot.id,
-    //           ...documentSnapshot.data(),
-    //         };
-    //         posts.push(post);
-    //       });
-    //       setItems(posts);
-    //     });
-    //   return unsubscribe;
-    // }, []);
-
     function getPosts(){
-      const q = query(collection(db, "posts"));
+      const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
       getDocs(q)
       .then(
         (querySnapshot) =>{
@@ -123,7 +88,10 @@ export default function Posts({navigation}) {
     }
   }
     return(
-        <View>
+        <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={getPosts} />
+        }>
             <SearchBar
                 placeholder="What are you looking for?"
                 onChangeText={(text) => {setSearch(text)}}
@@ -135,7 +103,7 @@ export default function Posts({navigation}) {
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
             />
-        </View>
+        </ScrollView>
     );
 }
 

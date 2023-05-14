@@ -23,6 +23,7 @@ export default function MainNav({ navigation }) {
           ),
         }}
           component={Posts} />
+          {/*
         <Tab.Screen 
         name="Messages" 
         options={{
@@ -31,7 +32,7 @@ export default function MainNav({ navigation }) {
             <MaterialCommunityIcons name="message" color={color} size={size} />
             ),
         }}
-        component={Messages} />
+      component={Messages} />*/}
         <Tab.Screen 
             name="Profile" 
             options={{
