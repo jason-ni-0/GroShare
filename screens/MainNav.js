@@ -3,7 +3,7 @@ import { View, StyleSheet, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { Text, Button } from '@rneui/themed';
-// import Profile from '../screens/Profile'
+import Profile from '../screens/Profile'
 import Posts from '../screens/Posts'
 import Messages from '../screens/Messages'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -32,7 +32,6 @@ export default function MainNav({ navigation }) {
             ),
         }}
         component={Messages} />
-        {/*
         <Tab.Screen 
             name="Profile" 
             options={{
@@ -41,7 +40,7 @@ export default function MainNav({ navigation }) {
                 <MaterialCommunityIcons name="account" color={color} size={size} />
                 ),
             }}
-          component={Profile} />*/}
+          component={Profile} />
       </Tab.Navigator>
   );
   }
