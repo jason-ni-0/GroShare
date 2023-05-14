@@ -3,7 +3,7 @@ import { React, useState, useEffect } from 'react';
 import { SearchBar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native'
 
-export default function Posts() {
+export default function Posts({navigation}) {
     const nav = useNavigation();
     const [search, setSearch] = useState('');
     const items = [
@@ -30,7 +30,7 @@ export default function Posts() {
           headerRight: () => <TouchableOpacity
           style={styles.buttonFacebookStyle}
           activeOpacity={0.5}
-          onPress={() => {}}>
+          onPress={() => {navigation.navigate('Create Post');}}>
           <Image
             source={{
               uri:

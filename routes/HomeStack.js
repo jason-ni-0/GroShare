@@ -5,7 +5,7 @@ import CreatePost from '../screens/CreatePost'
 
 const Stack = createNativeStackNavigator();
 
-export default function HomeStack() {
+export default function HomeStack({navigation}) {
     return (
         <Stack.Navigator
         screenOptions={{
@@ -22,7 +22,6 @@ export default function HomeStack() {
         <Stack.Screen
           name="Create Post"
           component={CreatePost}
-          options={{ headerShown: false }}
         />
         </Stack.Navigator>
     );
