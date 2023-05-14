@@ -2,30 +2,76 @@ import { Text, FlatList, TouchableOpacity, View, Image, StyleSheet } from 'react
 import { React, useState, useEffect } from 'react';
 import { SearchBar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native'
+import { collection, query, where, getDocs, getFirestore, orderBy } from "firebase/firestore";
+import { getAuth } from 'firebase/auth';
+
 //import firestore from '@react-native-firebase/firestore';
 
 export default function Posts({navigation}) {
+  const [items, setItems] = useState([]);
+  // const items = [
+  //   {
+  //     id: 1,
+  //     sender: 'user',
+  //     title: 'test',
+  //     school: 'UC Santa Barbara',
+  //     time: 'May 10th',
+  //     desc: 'food'
+  //   },
+  //   {
+  //     id: 2,
+  //     sender: 'user2',
+  //     title: 'test2',
+  //     school: 'SBCC',
+  //     time: 'May 10th',
+  //     desc: 'personal stuff'
+  //   }
+  // ];
   const nav = useNavigation();
-  const [search, setSearch] = useState('');
-  //const [items, setItems] = useState([]);
-  const items = [
-    {
-      id: 1,
-      sender: 'user',
-      title: 'test',
-      school: 'UC Santa Barbara',
-      time: 'May 10th',
-      desc: 'food'
-    },
-    {
-      id: 2,
-      sender: 'user2',
-      title: 'test2',
-      school: 'SBCC',
-      time: 'May 10th',
-      desc: 'personal stuff'
+  useEffect(() => {
+    if (auth){
+      getPosts();
     }
-  ];
+      nav.setOptions({
+        headerRight: () => <TouchableOpacity
+        style={styles.buttonFacebookStyle}
+        activeOpacity={0.5}
+        onPress={() => {navigation.navigate('Create Post');}}>
+        <Image
+          source={{
+            uri:
+              'https://img.icons8.com/?size=50&id=GlTdJzFYfVzw&format=png',
+          }}
+          style={styles.buttonImageIconStyle}
+        />
+      </TouchableOpacity>
+      });
+  
+  },[])
+  const [search, setSearch] = useState('');
+  const auth = getAuth()
+  const renderItem = ({item}) => {
+    return(
+        <TouchableOpacity>
+        <View style={styles.post}>
+      <View style={styles.header}>
+        <Image source={{ uri: 'https://webupon.com/wp-content/uploads/2021/09/SampleImage1-Dog-small.png' }} style={styles.avatar} />
+        <View>
+          <Text style={styles.name}>{item.title}</Text>
+          <Text style={styles.date}>{item.time}</Text>
+          <Text style={styles.date}>{item.school}</Text>
+        </View>
+      </View>
+      <Text style={styles.description}>{item.desc}</Text>
+      {item.img && <Image source={{ uri: item.img }} style={{ height: 200, width: '100%' }} />}
+      <View style={styles.actions}>
+      </View>
+    </View>
+    </TouchableOpacity>
+    )
+}
+  if (auth){
+    const db = getFirestore();
   // useEffect(() => {
   //   const unsubscribe = firestore()
   //     .collection('posts')
@@ -60,45 +106,22 @@ export default function Posts({navigation}) {
     //   return unsubscribe;
     // }, []);
 
-    useEffect(() => {
-        nav.setOptions({
-          headerRight: () => <TouchableOpacity
-          style={styles.buttonFacebookStyle}
-          activeOpacity={0.5}
-          onPress={() => {navigation.navigate('Create Post');}}>
-          <Image
-            source={{
-              uri:
-                'https://img.icons8.com/?size=50&id=GlTdJzFYfVzw&format=png',
-            }}
-            style={styles.buttonImageIconStyle}
-          />
-        </TouchableOpacity>
-        });
-    
-    })
-
-    const renderItem = ({item}) => {
-        return(
-            <TouchableOpacity>
-            <View style={styles.post}>
-          <View style={styles.header}>
-            <Image source={{ uri: 'https://webupon.com/wp-content/uploads/2021/09/SampleImage1-Dog-small.png' }} style={styles.avatar} />
-            <View>
-              <Text style={styles.name}>{item.title}</Text>
-              <Text style={styles.date}>{item.time}</Text>
-              <Text style={styles.date}>{item.school}</Text>
-            </View>
-          </View>
-          <Text style={styles.description}>{item.desc}</Text>
-          {/*{item.image && */}<Image source={{ uri: 'https://media.istockphoto.com/id/1408374876/photo/oatmeal-porridge-bowl-with-berry-fruits-in-female-hands.jpg?b=1&s=170667a&w=0&k=20&c=R8sW8tHHzj7v57rssA06Ko-0GBL8mU2ktSydFaTsEGU=' }} style={{ height: 200, width: '100%' }} />{/*}*/}
-          <View style={styles.actions}>
-          </View>
-        </View>
-        </TouchableOpacity>
-        )
+    function getPosts(){
+      const q = query(collection(db, "posts"));
+      getDocs(q)
+      .then(
+        (querySnapshot) =>{
+          var list = [];
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+            list.push(doc.data())
+          });
+          setItems(list);
+        }
+      )
     }
-
+  }
     return(
         <View>
             <SearchBar
